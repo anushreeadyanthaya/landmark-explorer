@@ -1,6 +1,5 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
   description: API specification
@@ -10,6 +9,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: landmarks
+    description: Landmark operations
 paths:
   /healthz:
     get:
@@ -24,6 +25,81 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /landmarks:
+    get:
+      operationId: getLandmarks
+      tags: [landmarks]
+      summary: Get landmarks in bounding box
+      description: Returns Wikipedia landmarks within the given map bounding box
+      parameters:
+        - name: north
+          in: query
+          required: true
+          schema:
+            type: number
+          description: Northern latitude of the bounding box
+        - name: south
+          in: query
+          required: true
+          schema:
+            type: number
+          description: Southern latitude of the bounding box
+        - name: east
+          in: query
+          required: true
+          schema:
+            type: number
+          description: Eastern longitude of the bounding box
+        - name: west
+          in: query
+          required: true
+          schema:
+            type: number
+          description: Western longitude of the bounding box
+      responses:
+        "200":
+          description: List of landmarks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Landmark"
+        "400":
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /landmarks/{pageId}:
+    get:
+      operationId: getLandmarkDetail
+      tags: [landmarks]
+      summary: Get landmark detail
+      description: Returns detailed info for a single Wikipedia landmark
+      parameters:
+        - name: pageId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Wikipedia page ID
+      responses:
+        "200":
+          description: Landmark detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LandmarkDetail"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +110,47 @@ components:
       required:
         - status
 
+    Landmark:
+      type: object
+      required: [pageId, title, lat, lng, wikipediaUrl]
+      properties:
+        pageId:
+          type: integer
+        title:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        thumbnailUrl:
+          type: ["string", "null"]
+        extract:
+          type: ["string", "null"]
+        wikipediaUrl:
+          type: string
+
+    LandmarkDetail:
+      type: object
+      required: [pageId, title, lat, lng, wikipediaUrl]
+      properties:
+        pageId:
+          type: integer
+        title:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        extract:
+          type: ["string", "null"]
+        thumbnailUrl:
+          type: ["string", "null"]
+        wikipediaUrl:
+          type: string
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
