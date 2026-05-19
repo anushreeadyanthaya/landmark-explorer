@@ -86,7 +86,7 @@ export function SearchBar({ onFlyTo }: { onFlyTo: (t: { lat: number; lng: number
 
   return (
     <div ref={containerRef} className="relative w-full max-w-md">
-      <div className="flex items-center gap-2 bg-zinc-900/95 backdrop-blur-md border border-zinc-600/60 rounded-xl px-3 py-2 shadow-[0_4px_24px_rgba(0,0,0,0.6)] ring-1 ring-white/5">
+      <div className="flex items-center gap-2 bg-[hsl(220,13%,33%)]/95 backdrop-blur-md border border-[hsl(220,11%,42%)] rounded-xl px-3 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.30)]">
         {loading ? (
           <Loader2 className="w-4 h-4 text-white/60 animate-spin shrink-0" />
         ) : (
@@ -108,12 +108,12 @@ export function SearchBar({ onFlyTo }: { onFlyTo: (t: { lat: number; lng: number
       </div>
 
       {open && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-zinc-900 border border-zinc-600/60 rounded-xl shadow-2xl overflow-hidden z-50 ring-1 ring-white/5">
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-[hsl(220,13%,33%)] border border-[hsl(220,11%,42%)] rounded-xl shadow-2xl overflow-hidden z-50">
           {results.map((r) => (
             <button
               key={r.place_id}
               onClick={() => handleSelect(r)}
-              className="w-full text-left flex items-start gap-2.5 px-3 py-2.5 hover:bg-zinc-800 transition-colors"
+              className="w-full text-left flex items-start gap-2.5 px-3 py-2.5 hover:bg-[hsl(220,11%,40%)] transition-colors"
             >
               <MapPin className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
               <div className="min-w-0">
