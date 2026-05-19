@@ -162,7 +162,6 @@ export function Map() {
           zoom={13}
           scrollWheelZoom={true}
           className="w-full h-full"
-          zoomControl={false}
         >
           <TileLayer
             attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
