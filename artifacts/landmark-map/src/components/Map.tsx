@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, Circle, useMapEvents, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Circle, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 
@@ -10,7 +10,7 @@ import { useGetLandmarks, getGetLandmarksQueryKey } from '@workspace/api-client-
 import { LandmarkSidebar } from './LandmarkSidebar';
 import { ExplorePanel } from './ExplorePanel';
 import { SearchBar, SearchBarController } from './SearchBar';
-import { MapPin, Compass, Heart, Bookmark, Loader2, LocateFixed } from 'lucide-react';
+import { MapPin, Compass, Heart, Bookmark, Loader2, LocateFixed, ChevronRight } from 'lucide-react';
 import type { Landmark } from '@workspace/api-client-react';
 
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -113,7 +113,7 @@ export function Map() {
     setActivePanel(prev => (prev === panel ? null : panel));
   };
 
-  const handleMarkerClick = (pageId: number) => {
+  const handleViewDetails = (pageId: number) => {
     setSelectedPageId(pageId);
     setActivePanel(null);
   };
@@ -223,10 +223,18 @@ export function Map() {
               key={landmark.pageId}
               position={[landmark.lat, landmark.lng]}
               icon={createCustomIcon(isFavorite(landmark.pageId), selectedPageId === landmark.pageId)}
-              eventHandlers={{
-                click: () => handleMarkerClick(landmark.pageId),
-              }}
-            />
+            >
+              <Popup className="landmark-popup" closeButton={false} offset={[0, -20]} minWidth={230}>
+                <LandmarkPopupContent
+                  landmark={landmark}
+                  isFav={isFavorite(landmark.pageId)}
+                  isSaved={isSaved(landmark.pageId)}
+                  onToggleFavorite={() => toggleFavorite(landmark.pageId)}
+                  onToggleSave={() => isSaved(landmark.pageId) ? removeSaved(landmark.pageId) : save(landmark)}
+                  onViewDetails={() => handleViewDetails(landmark.pageId)}
+                />
+              </Popup>
+            </Marker>
           ))}
         </MapContainer>
       </div>
@@ -250,6 +258,83 @@ export function Map() {
           onRemoveSaved={removeSaved}
         />
       )}
+    </div>
+  );
+}
+
+function LandmarkPopupContent({
+  landmark,
+  isFav,
+  isSaved,
+  onToggleFavorite,
+  onToggleSave,
+  onViewDetails,
+}: {
+  landmark: Landmark;
+  isFav: boolean;
+  isSaved: boolean;
+  onToggleFavorite: () => void;
+  onToggleSave: () => void;
+  onViewDetails: () => void;
+}) {
+  return (
+    <div className="p-3" style={{ fontFamily: 'Inter, sans-serif' }}>
+      {landmark.thumbnailUrl && (
+        <img
+          src={landmark.thumbnailUrl}
+          alt={landmark.title}
+          style={{ width: '100%', height: '90px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }}
+        />
+      )}
+      <p style={{ fontWeight: 600, fontSize: '13px', color: '#111827', marginBottom: '2px', lineHeight: 1.3 }}>
+        {landmark.title}
+      </p>
+      {landmark.extract && (
+        <p style={{ fontSize: '11px', color: '#6b7280', marginBottom: '8px', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {landmark.extract}
+        </p>
+      )}
+      <div style={{ display: 'flex', gap: '6px', marginBottom: '6px' }}>
+        <button
+          onClick={(e) => { e.stopPropagation(); onToggleFavorite(); }}
+          style={{
+            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
+            padding: '5px 8px', borderRadius: '8px', fontSize: '11px', fontWeight: 500, cursor: 'pointer',
+            border: isFav ? '1.5px solid #fda4af' : '1.5px solid #e5e7eb',
+            background: isFav ? '#fff1f2' : '#f9fafb',
+            color: isFav ? '#e11d48' : '#374151',
+            transition: 'all 0.15s',
+          }}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill={isFav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          {isFav ? 'Favorited' : 'Favorite'}
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); onToggleSave(); }}
+          style={{
+            flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
+            padding: '5px 8px', borderRadius: '8px', fontSize: '11px', fontWeight: 500, cursor: 'pointer',
+            border: isSaved ? '1.5px solid #93c5fd' : '1.5px solid #e5e7eb',
+            background: isSaved ? '#eff6ff' : '#f9fafb',
+            color: isSaved ? '#2563eb' : '#374151',
+            transition: 'all 0.15s',
+          }}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill={isSaved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          {isSaved ? 'Saved' : 'Save'}
+        </button>
+      </div>
+      <button
+        onClick={(e) => { e.stopPropagation(); onViewDetails(); }}
+        style={{
+          width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
+          padding: '5px 8px', borderRadius: '8px', fontSize: '11px', fontWeight: 500, cursor: 'pointer',
+          border: '1.5px solid #e5e7eb', background: '#f3f4f6', color: '#374151', transition: 'all 0.15s',
+        }}
+      >
+        View details
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
   );
 }

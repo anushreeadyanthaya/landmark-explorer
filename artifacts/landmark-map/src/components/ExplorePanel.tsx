@@ -33,9 +33,12 @@ function LandmarkCard({
   onRemove?: (id: number) => void;
 }) {
   return (
-    <button
+    <div
       onClick={() => onSelect(landmark.pageId)}
-      className="w-full text-left group flex gap-3 p-3 rounded-xl hover:bg-accent/60 transition-colors"
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => e.key === 'Enter' && onSelect(landmark.pageId)}
+      className="w-full text-left group flex gap-3 p-3 rounded-xl hover:bg-accent/60 transition-colors cursor-pointer"
     >
       {landmark.thumbnailUrl ? (
         <img
@@ -76,7 +79,7 @@ function LandmarkCard({
           </div>
         )}
       </div>
-    </button>
+    </div>
   );
 }
 
