@@ -88,9 +88,9 @@ export function SearchBar({ onFlyTo }: { onFlyTo: (t: { lat: number; lng: number
     <div ref={containerRef} className="relative w-full max-w-md">
       <div className="flex items-center gap-2 bg-zinc-900/95 backdrop-blur-md border border-zinc-600/60 rounded-xl px-3 py-2 shadow-[0_4px_24px_rgba(0,0,0,0.6)] ring-1 ring-white/5">
         {loading ? (
-          <Loader2 className="w-4 h-4 text-muted-foreground animate-spin shrink-0" />
+          <Loader2 className="w-4 h-4 text-white/60 animate-spin shrink-0" />
         ) : (
-          <Search className="w-4 h-4 text-muted-foreground shrink-0" />
+          <Search className="w-4 h-4 text-white/60 shrink-0" />
         )}
         <input
           type="text"
@@ -98,7 +98,7 @@ export function SearchBar({ onFlyTo }: { onFlyTo: (t: { lat: number; lng: number
           onChange={handleChange}
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder="Search any city or place..."
-          className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none min-w-0"
+          className="flex-1 bg-transparent text-sm text-white placeholder:text-white/50 outline-none min-w-0"
         />
         {query && (
           <button onClick={handleClear} className="shrink-0 text-muted-foreground hover:text-foreground transition-colors">
@@ -117,10 +117,10 @@ export function SearchBar({ onFlyTo }: { onFlyTo: (t: { lat: number; lng: number
             >
               <MapPin className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-sm text-foreground truncate font-medium">
+                <p className="text-sm text-white truncate font-medium">
                   {r.display_name.split(',')[0]}
                 </p>
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="text-xs text-white/50 truncate">
                   {r.display_name.split(',').slice(1, 3).join(',').trim()}
                 </p>
               </div>

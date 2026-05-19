@@ -49,9 +49,9 @@ function LandmarkCard({
         </div>
       )}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-foreground truncate leading-snug">{landmark.title}</p>
+        <p className="text-sm font-semibold text-white truncate leading-snug">{landmark.title}</p>
         {landmark.extract && (
-          <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">{landmark.extract}</p>
+          <p className="text-xs text-white/55 mt-1 line-clamp-2 leading-relaxed">{landmark.extract}</p>
         )}
       </div>
       <div className="flex flex-col gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -106,26 +106,26 @@ export function ExplorePanel({
     : 'Save landmarks to access them later.';
 
   const emptyIcon = tab === 'explore'
-    ? <MapPin className="w-8 h-8 text-muted-foreground/40" />
+    ? <MapPin className="w-8 h-8 text-white/30" />
     : tab === 'favorites'
-    ? <Heart className="w-8 h-8 text-muted-foreground/40" />
-    : <Bookmark className="w-8 h-8 text-muted-foreground/40" />;
+    ? <Heart className="w-8 h-8 text-white/30" />
+    : <Bookmark className="w-8 h-8 text-white/30" />;
 
   return (
     <div className="w-80 h-full bg-card/95 backdrop-blur-sm border-r border-border shadow-2xl flex flex-col z-[500] shrink-0">
       <div className="px-4 pt-4 pb-3 border-b border-border flex items-center justify-between shrink-0">
         <div>
-          <h2 className="font-semibold text-sm text-foreground capitalize">{tab}</h2>
+          <h2 className="font-semibold text-sm text-white capitalize">{tab}</h2>
           {tab === 'explore' && (
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-xs text-white/50 mt-0.5">
               {isLoading ? 'Loading...' : `${landmarks.length} landmark${landmarks.length !== 1 ? 's' : ''} in view`}
             </p>
           )}
           {tab === 'favorites' && (
-            <p className="text-xs text-muted-foreground mt-0.5">{favoritedLandmarks.length} saved</p>
+            <p className="text-xs text-white/50 mt-0.5">{favoritedLandmarks.length} saved</p>
           )}
           {tab === 'saved' && (
-            <p className="text-xs text-muted-foreground mt-0.5">{savedLandmarks.length} saved</p>
+            <p className="text-xs text-white/50 mt-0.5">{savedLandmarks.length} saved</p>
           )}
         </div>
         <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={onClose}>
@@ -138,7 +138,7 @@ export function ExplorePanel({
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-3">
               {emptyIcon}
-              <p className="text-xs text-muted-foreground text-center max-w-[180px] leading-relaxed">{emptyMessage}</p>
+              <p className="text-xs text-white/50 text-center max-w-[180px] leading-relaxed">{emptyMessage}</p>
             </div>
           ) : (
             <div className="space-y-0.5">

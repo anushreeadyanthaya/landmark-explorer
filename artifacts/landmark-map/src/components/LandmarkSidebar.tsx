@@ -35,7 +35,7 @@ export function LandmarkSidebar({
     <div className="w-80 md:w-96 h-full bg-card border-l border-border shadow-2xl flex flex-col relative z-[500] shrink-0 animate-in slide-in-from-right duration-300">
       {/* Header */}
       <div className="p-4 border-b border-border flex justify-between items-start shrink-0 bg-card">
-        <h2 className="font-semibold text-base text-foreground pr-3 leading-snug">
+        <h2 className="font-semibold text-base text-white pr-3 leading-snug">
           {isLoading ? <Skeleton className="h-5 w-44" /> : landmark?.title}
         </h2>
         <Button variant="ghost" size="icon" onClick={onClose} className="h-7 w-7 shrink-0 -mt-0.5 -mr-1">
@@ -71,7 +71,7 @@ export function LandmarkSidebar({
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
                   isFavorite
                     ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950 dark:border-rose-800 dark:text-rose-400'
-                    : 'bg-muted/50 border-border text-muted-foreground hover:bg-accent'
+                    : 'bg-white/10 border-white/20 text-white/70 hover:bg-white/15'
                 }`}
               >
                 <Heart className={`w-3.5 h-3.5 ${isFavorite ? 'fill-current' : ''}`} />
@@ -82,7 +82,7 @@ export function LandmarkSidebar({
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
                   isSaved
                     ? 'bg-primary/10 border-primary/30 text-primary'
-                    : 'bg-muted/50 border-border text-muted-foreground hover:bg-accent'
+                    : 'bg-white/10 border-white/20 text-white/70 hover:bg-white/15'
                 }`}
               >
                 <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-current' : ''}`} />
@@ -92,9 +92,9 @@ export function LandmarkSidebar({
 
             <div className="p-4 space-y-4">
               {landmark.extract ? (
-                <p className="text-sm text-muted-foreground leading-relaxed">{landmark.extract}</p>
+                <p className="text-sm text-white/70 leading-relaxed">{landmark.extract}</p>
               ) : (
-                <p className="text-sm text-muted-foreground italic">No description available.</p>
+                <p className="text-sm text-white/50 italic">No description available.</p>
               )}
 
               <Button asChild className="w-full" variant="default" size="sm">
@@ -111,7 +111,7 @@ export function LandmarkSidebar({
             </div>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground text-center mt-10 px-4">Could not load details.</p>
+          <p className="text-sm text-white/50 text-center mt-10 px-4">Could not load details.</p>
         )}
       </ScrollArea>
     </div>

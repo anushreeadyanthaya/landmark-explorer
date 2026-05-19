@@ -151,30 +151,30 @@
   --elevate-2: rgba(255,255,255, .09);
 
   --background: 215 30% 12%;
-  --foreground: 45 20% 90%;
+  --foreground: 0 0% 100%;
   --border: 215 20% 25%;
   --input: 215 20% 25%;
   --ring: 190 60% 45%;
 
   --card: 215 30% 15%;
-  --card-foreground: 45 20% 90%;
+  --card-foreground: 0 0% 100%;
   --card-border: 215 20% 25%;
 
   --popover: 215 30% 15%;
-  --popover-foreground: 45 20% 90%;
+  --popover-foreground: 0 0% 100%;
   --popover-border: 215 20% 25%;
 
   --primary: 190 60% 45%;
   --primary-foreground: 215 30% 12%;
 
   --secondary: 215 20% 22%;
-  --secondary-foreground: 45 20% 90%;
+  --secondary-foreground: 0 0% 100%;
 
   --muted: 215 20% 20%;
-  --muted-foreground: 215 15% 60%;
+  --muted-foreground: 215 15% 70%;
 
   --accent: 215 20% 22%;
-  --accent-foreground: 45 20% 90%;
+  --accent-foreground: 0 0% 100%;
 
   --destructive: 0 65% 50%;
   --destructive-foreground: 45 20% 96%;
