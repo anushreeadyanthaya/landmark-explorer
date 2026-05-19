@@ -86,11 +86,11 @@ export function SearchBar({ onFlyTo }: { onFlyTo: (t: { lat: number; lng: number
 
   return (
     <div ref={containerRef} className="relative w-full max-w-md">
-      <div className="flex items-center gap-2 bg-[hsl(220,13%,33%)]/95 backdrop-blur-md border border-[hsl(220,11%,42%)] rounded-xl px-3 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.30)]">
+      <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md border border-gray-200 rounded-xl px-3 py-2 shadow-[0_4px_20px_rgba(0,0,0,0.12)]">
         {loading ? (
-          <Loader2 className="w-4 h-4 text-white/60 animate-spin shrink-0" />
+          <Loader2 className="w-4 h-4 text-muted-foreground animate-spin shrink-0" />
         ) : (
-          <Search className="w-4 h-4 text-white/60 shrink-0" />
+          <Search className="w-4 h-4 text-muted-foreground shrink-0" />
         )}
         <input
           type="text"
@@ -98,29 +98,29 @@ export function SearchBar({ onFlyTo }: { onFlyTo: (t: { lat: number; lng: number
           onChange={handleChange}
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder="Search any city or place..."
-          className="flex-1 bg-transparent text-sm text-white placeholder:text-white/50 outline-none min-w-0"
+          className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none min-w-0"
         />
         {query && (
-          <button onClick={handleClear} className="shrink-0 text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={handleClear} className="shrink-0 text-muted-foreground hover:text-foreground transition-colors p-0.5">
             <X className="w-3.5 h-3.5" />
           </button>
         )}
       </div>
 
       {open && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-[hsl(220,13%,33%)] border border-[hsl(220,11%,42%)] rounded-xl shadow-2xl overflow-hidden z-50">
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-50">
           {results.map((r) => (
             <button
               key={r.place_id}
               onClick={() => handleSelect(r)}
-              className="w-full text-left flex items-start gap-2.5 px-3 py-2.5 hover:bg-[hsl(220,11%,40%)] transition-colors"
+              className="w-full text-left flex items-start gap-2.5 px-3 py-2.5 hover:bg-blue-50 transition-colors"
             >
               <MapPin className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-sm text-white truncate font-medium">
+                <p className="text-sm text-foreground truncate font-medium">
                   {r.display_name.split(',')[0]}
                 </p>
-                <p className="text-xs text-white/50 truncate">
+                <p className="text-xs text-muted-foreground truncate">
                   {r.display_name.split(',').slice(1, 3).join(',').trim()}
                 </p>
               </div>

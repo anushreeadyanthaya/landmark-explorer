@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Circle, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import "leaflet/dist/leaflet.css";
 
@@ -10,7 +10,7 @@ import { useGetLandmarks, getGetLandmarksQueryKey } from '@workspace/api-client-
 import { LandmarkSidebar } from './LandmarkSidebar';
 import { ExplorePanel } from './ExplorePanel';
 import { SearchBar, SearchBarController } from './SearchBar';
-import { MapPin, Compass, Heart, Bookmark, Loader2 } from 'lucide-react';
+import { MapPin, Compass, Heart, Bookmark, Loader2, LocateFixed } from 'lucide-react';
 import type { Landmark } from '@workspace/api-client-react';
 
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -24,8 +24,16 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
+function LocateController({ target }: { target: { lat: number; lng: number } | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (target) map.flyTo([target.lat, target.lng], 15, { duration: 1.4 });
+  }, [target, map]);
+  return null;
+}
+
 function createCustomIcon(isFavorite: boolean, isSelected: boolean) {
-  const color = isSelected ? '#2dd4bf' : isFavorite ? '#fb7185' : '#60a5fa';
+  const color = isSelected ? '#0ea5e9' : isFavorite ? '#f43f5e' : '#3b82f6';
   const size = isSelected ? 36 : 28;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24">
     <path d="M12 21 C12 21 5 14 5 9.5 A7 7 0 0 1 19 9.5 C19 14 12 21 12 21Z" fill="${color}" stroke="rgba(0,0,0,0.4)" stroke-width="1.2" stroke-linejoin="round"/>
@@ -70,6 +78,23 @@ export function Map() {
   const [selectedPageId, setSelectedPageId] = useState<number | null>(null);
   const [activePanel, setActivePanel] = useState<PanelType>(null);
   const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number } | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
+
+  const handleLocate = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setUserLocation(loc);
+        setFlyTarget(loc);
+        setLocating(false);
+      },
+      () => setLocating(false),
+      { timeout: 10000 }
+    );
+  };
 
   const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites();
   const { saved, save, remove: removeSaved, isSaved } = useSaved();
@@ -122,6 +147,14 @@ export function Map() {
             badge={saved.length > 0 ? saved.length : undefined}
             onClick={() => handleNavClick('saved')}
           />
+          <NavButton
+            icon={locating
+              ? <Loader2 className="w-4 h-4 animate-spin" />
+              : <LocateFixed className="w-4 h-4" />}
+            label="My Location"
+            active={!!userLocation}
+            onClick={handleLocate}
+          />
         </div>
 
         <div className="flex flex-col items-center gap-0.5 pb-1">
@@ -158,13 +191,32 @@ export function Map() {
           className="w-full h-full"
         >
           <TileLayer
-            attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
             subdomains="abcd"
             maxZoom={19}
           />
           <MapBoundsTracker setBounds={setBounds} />
           <SearchBarController flyTarget={flyTarget} />
+          <LocateController target={flyTarget} />
+          {userLocation && (
+            <>
+              <Circle
+                center={[userLocation.lat, userLocation.lng]}
+                radius={80}
+                pathOptions={{ color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.15, weight: 1.5 }}
+              />
+              <Marker
+                position={[userLocation.lat, userLocation.lng]}
+                icon={L.divIcon({
+                  html: `<div style="width:14px;height:14px;background:#3b82f6;border:2.5px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(59,130,246,0.5)"></div>`,
+                  className: '',
+                  iconSize: [14, 14],
+                  iconAnchor: [7, 7],
+                })}
+              />
+            </>
+          )}
 
           {landmarks.map((landmark) => (
             <Marker
