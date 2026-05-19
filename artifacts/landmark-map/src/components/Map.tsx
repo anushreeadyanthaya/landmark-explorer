@@ -131,6 +131,7 @@ export function Map() {
             icon={<MapPin className="w-4 h-4" />}
             label="Explore"
             active={activePanel === 'explore'}
+            badge={landmarks.length > 0 ? landmarks.length : undefined}
             onClick={() => handleNavClick('explore')}
           />
           <NavButton
