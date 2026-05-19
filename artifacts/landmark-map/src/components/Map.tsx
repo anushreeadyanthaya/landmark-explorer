@@ -151,11 +151,6 @@ export function Map() {
 
       {/* Map */}
       <div className="flex-1 h-full relative z-0">
-        {/* Search bar floating over map */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[400] w-full max-w-md px-4">
-          <SearchBar onFlyTo={setFlyTarget} />
-        </div>
-
         <MapContainer
           center={[51.505, -0.09]}
           zoom={13}
@@ -182,6 +177,13 @@ export function Map() {
             />
           ))}
         </MapContainer>
+      </div>
+
+      {/* Search bar — floating overlay above map, outside Leaflet DOM */}
+      <div className="absolute top-3 right-4 z-[700] w-80 pointer-events-none">
+        <div className="pointer-events-auto">
+          <SearchBar onFlyTo={setFlyTarget} />
+        </div>
       </div>
 
       {/* Detail sidebar */}
