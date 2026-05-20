@@ -176,6 +176,7 @@ export function Map() {
           favoriteIds={favorites}
           savedLandmarks={saved}
           isLoading={isLoading || isFetching}
+          userLocation={userLocation}
           onSelect={handleViewDetails}
           onClose={() => setActivePanel(null)}
           onToggleFavorite={toggleFavorite}
